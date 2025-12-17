@@ -1,36 +1,70 @@
-# name: Python
+# name: Nodejs
 
 # on:
-#   workflow_dispatch:
-#   schedule:
-#     - cron: "5 */3 * * *"
 #   push:
 #     branches: ["main"]
+#   schedule:
+#     - cron: "10 */3 * * *"
+#   workflow_dispatch:
 
 # jobs:
-#   run:
+#   build:
 #     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read
 
 #     steps:
-#       - name: Checkout do código
+#       - name: Checkout código
 #         uses: actions/checkout@v4
 
-#       - name: Setup Python
-#         uses: actions/setup-python@v4
+#       - name: Configurar Node.js
+#         uses: actions/setup-node@v4
 #         with:
-#           python-version: "3.12"
+#           node-version: "20"
+
+#       # - name: Setup Chrome
+#       #   uses: browser-actions/setup-chrome@v2
+
+#       - name: Instalar dependências do sistema
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y \
+#             wget \
+#             gnupg \
+#             ca-certificates \
+#             apt-transport-https \
+#             xvfb \
+#             && sudo rm -rf /var/lib/apt/lists/*
+
+#       - name: Instalar Google Chrome
+#         run: |
+#           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
+#           && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google.list \
+#           && sudo apt-get update \
+#           && sudo apt-get install -y google-chrome-stable \
+#           && sudo rm -rf /var/lib/apt/lists/*
 
 #       - name: Instalar dependências
-#         run: |
-#           python -m pip install --upgrade pip --quiet
-#           if [ -f requirements.txt ]; then pip install -r requirements.txt --quiet; fi
+#         run: npm ci
 
-#       - name: Executar script Python
+#       - name: Cookies
+#         env:
+#           COOKIES: ${{ secrets.COOKIES }}
+#           LOCALSTORAGE: ${{ secrets.LOCALSTORAGE }}
+#         run: |
+#           echo "$COOKIES" > cookies.json
+#           echo "$LOCALSTORAGE" > localstorage.json
+
+#       - name: Executar node index.js
 #         env:
 #           URL: ${{ secrets.URL }}
-#           TOKENS: ${{ secrets.TOKENS }}
-#           USER_AGENT: ${{ secrets.USER_AGENT }}
+#           LOGIN: ${{ secrets.LOGIN }}
+#           SENHA: ${{ secrets.SENHA }}
 #         timeout-minutes: 10
-#         run: python app.py
+#         run: xvfb-run --auto-servernum -- node --trace-warnings rox.js
+#         # run: node cpick.js
+
+#       - name: Upload da captura
+#         uses: actions/upload-artifact@v4
+#         if: success() || failure()
+#         with:
+#           name: screenshot
+#           path: screen.png
