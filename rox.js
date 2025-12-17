@@ -72,6 +72,9 @@ const rox = async () => {
     });
 
     await new Promise((r) => setTimeout(r, 38000));
+
+    await page.reload({ waitUntil: "networkidle2" });
+
     await page.screenshot({ path: "screen.png" });
   } catch (error) {
     console.error(`Erro interno do servidor: ${error.message}`);
