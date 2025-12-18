@@ -59,17 +59,26 @@ const rox = async () => {
 
     await new Promise((r) => setTimeout(r, 2000));
 
-    await page.evaluate(() => {
-      const botao = Array.from(
-        document.querySelectorAll('div[dir="auto"]')
-      ).find((el) => {
-        const texto = el.textContent.trim();
-        return texto === "Ganhe mais" || texto === "Earn more";
+    for (let i = 0; i < 5; i++) {
+      const clica = await page.evaluate(() => {
+        const botao = Array.from(
+          document.querySelectorAll('div[dir="auto"]')
+        ).find((el) => {
+          const texto = el.textContent.trim();
+          return texto === "Ganhe mais" || texto === "Earn more";
+        });
+        if (botao) {
+          botao.click();
+          return true;
+        }
+        return false;
       });
-      if (botao) {
-        botao.click();
+      if (clica) {
+        console.log("Botão clicado, parando o loop.");
+        break;
       }
-    });
+      await new Promise((r) => setTimeout(r, 5000));
+    }
 
     await new Promise((r) => setTimeout(r, 38000));
 
