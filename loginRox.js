@@ -9,7 +9,7 @@ const COOKIES_PATH = "cookies.json";
 const LOCALSTORAGE_PATH = "localstorage.json";
 const LOGIN = process.env.LOGIN;
 const SENHA = process.env.SENHA;
-const PROXY = JSON.parse(process.env.PROXY) || false;
+const PROXY = JSON.parse(process.env.PROXY);
 
 const loginRox = async () => {
   const { page, browser } = await connect({
