@@ -84,35 +84,37 @@ const loginRox = async () => {
       return el ? el.textContent.trim() : null;
     });
 
-    saldo ? console.log("Login bem-sucedido!") : console.log("Falha no login.");
+    // saldo ? console.log("Login bem-sucedido!") : console.log("Falha no login.");
 
-    const cookies = await page.cookies();
-    fs.writeFileSync(COOKIES_PATH, JSON.stringify(cookies, null, 2));
-    console.log("✅ Cookies salvos em", COOKIES_PATH);
-    const localStorageData = await page.evaluate(() => {
-      const data = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        data[key] = localStorage.getItem(key);
-      }
-      return data;
-    });
-    fs.writeFileSync(
-      LOCALSTORAGE_PATH,
-      JSON.stringify(localStorageData, null, 2)
-    );
+    if (saldo) {
+      const cookies = await page.cookies();
+      fs.writeFileSync(COOKIES_PATH, JSON.stringify(cookies, null, 2));
+      console.log("✅ Cookies salvos em", COOKIES_PATH);
+      const localStorageData = await page.evaluate(() => {
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          data[key] = localStorage.getItem(key);
+        }
+        return data;
+      });
+      fs.writeFileSync(
+        LOCALSTORAGE_PATH,
+        JSON.stringify(localStorageData, null, 2)
+      );
 
-    await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 2000));
 
-    execSync(`gh secret set COOKIES < ${COOKIES_PATH}`, {
-      stdio: "inherit",
-    });
+      execSync(`gh secret set COOKIES < ${COOKIES_PATH}`, {
+        stdio: "inherit",
+      });
 
-    execSync(`gh secret set LOCALSTORAGE < ${LOCALSTORAGE_PATH}`, {
-      stdio: "inherit",
-    });
+      execSync(`gh secret set LOCALSTORAGE < ${LOCALSTORAGE_PATH}`, {
+        stdio: "inherit",
+      });
 
-    console.log("✅ LocalStorage salvo em", LOCALSTORAGE_PATH);
+      console.log("✅ LocalStorage salvo em", LOCALSTORAGE_PATH);
+    }
   } catch (error) {
     console.error(`Erro interno do servidor: ${error.message}`);
   } finally {
