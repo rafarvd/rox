@@ -7,6 +7,10 @@ on:
     - cron: "20 */1 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+  secrets: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,9 +23,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      # - name: Setup Chrome
-      #   uses: browser-actions/setup-chrome@v2
 
       - name: Instalar dependências do sistema
         run: |
@@ -58,6 +59,7 @@ jobs:
           URL: ${{ secrets.URL }}
           LOGIN: ${{ secrets.LOGIN }}
           SENHA: ${{ secrets.SENHA }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 10
         run: xvfb-run --auto-servernum -- node --trace-warnings rox.js
         # run: node cpick.js
