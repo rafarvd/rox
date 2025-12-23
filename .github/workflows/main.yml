@@ -58,6 +58,7 @@ jobs:
           URL: ${{ secrets.URL }}
           LOGIN: ${{ secrets.LOGIN }}
           SENHA: ${{ secrets.SENHA }}
+          PROXY: ${{ secrets.PROXY }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 10
         run: xvfb-run --auto-servernum -- node --trace-warnings rox.js
